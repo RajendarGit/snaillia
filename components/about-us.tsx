@@ -10,15 +10,15 @@ const AboutUs = () => {
           <div className="flex-1">
             <h1 className="text-4xl mb-4">About Us</h1>
             <p className="mb-8 lg:w-[80%] text-gray-500">
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Saepe
-              praesentium iure hic vel maxime itaque qui animi in a accusantium
-              adipisci quo, delectus facere. Atque eveniet dolor, tempore quae
-              illo quia. Facilis, dolorum accusamus. Odit quae nihil possimus,
-              numquam aspernatur, in asperiores beatae fugit eum porro vel eius
-              provident labore nam culpa ipsum sint amet ut officiis assumenda
-              odio. Quod deserunt soluta distinctio neque voluptate excepturi
-              doloribus, non aperiam, quis, unde similique fugiat. Rem
-              reprehenderit.
+              Snaillia was founded with a passion for harnessing the power of
+              nature to create skincare that truly cares for your skin. Our
+              journey began with a simple belief: everyone deserves access to
+              clean, safe, and effective beauty products. We are committed to
+              using only the highest quality, ethically sourced ingredients—free
+              from harsh chemicals and synthetic additives. Every product is
+              thoughtfully formulated to deliver visible results while respecting
+              your skin and the environment. Join us as we continue to innovate
+              and inspire confidence through natural beauty.
             </p>
             <Button variant="secondary" size="lg" className="mr-4">
               Buy Now

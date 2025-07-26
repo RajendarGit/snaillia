@@ -21,10 +21,11 @@ const Hero = () => {
               Natural Inner Beauty
             </p>
             <p className="text-gray-500 mb-4 lg:w-[500px]">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Labore
-              natus illo aliquam sed modi est quia incidunt, suscipit eveniet
-              praesentium harum ipsa similique porro beatae quos eum enim
-              temporibus. Quisquam?
+              Discover the essence of radiant skin with Snaillia. Our
+              all-natural, organic skincare products are crafted to nourish,
+              protect, and rejuvenate your skin using the purest ingredients
+              from nature. Experience gentle, effective formulas designed for
+              every skin type because your natural beauty deserves nothing less.
             </p>
             <div>
               <p className="font-semibold mb-2">Sizes</p>

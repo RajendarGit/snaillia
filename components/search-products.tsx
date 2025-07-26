@@ -1,18 +1,11 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { products } from "@/data/products";
-import { Search } from "lucide-react";
+import { Search, X } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
-
-interface Product {
-  id: number;
-  name: string;
-  description: string;
-  price: number | string;
-  image: string;
-}
+import { Product } from "@/types/products";
 
 const SearchProduct = () => {
   const [showSearch, setShowSearch] = useState(false);
@@ -55,13 +48,22 @@ const SearchProduct = () => {
       <Button
         variant="ghost"
         className="bg-transparent text-gray-800 dark:text-white hover:bg-transparent shadow-none font-semibold"
-        onClick={() => setShowSearch((prev) => !prev)}
+        onClick={() => setShowSearch(true)}
       >
         <Search className="w-5 h-5" />
       </Button>
       {showSearch && (
-        <div className="absolute right-0 mt-2 w-72 z-50">
+        <div className="absolute right-0 top-0 mt-[-14px] w-72 lg:w-100 z-50 bg-white p-2 rounded-lg">
           <div className="flex gap-2">
+            <Button
+              onClick={() => setShowSearch(false)}
+              size="lg"
+              aria-label="Close"
+              type="button"
+              variant="ghost"
+            >
+              <X className="w-5 h-5" />
+            </Button>
             <input
               ref={inputRef}
               type="text"

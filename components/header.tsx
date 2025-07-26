@@ -2,21 +2,17 @@
 import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
 import Logo from "./logo";
-import {
-  ShoppingCart,
-  User,
-  Menu as MenuIcon,
-  X,
-  Heart,
-} from "lucide-react";
+import { ShoppingCart, User, Menu as MenuIcon, X, Heart } from "lucide-react";
 import Menu from "./menu";
 import { Card, CardContent } from "./ui/card";
 import { useEffect, useState } from "react";
 import SearchProduct from "./search-products";
+import { useRouter } from "next/navigation";
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -68,6 +64,7 @@ const Header = () => {
                 <Heart className="w-5 h-5" />
               </Button>
               <Button
+                onClick={() => router.push("/user-login")}
                 variant="ghost"
                 className="bg-transparent text-gray-800 dark:text-white hover:bg-transparent shadow-none font-semibold"
               >
