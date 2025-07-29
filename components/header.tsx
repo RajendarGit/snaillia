@@ -5,22 +5,37 @@ import Logo from "./logo";
 import { ShoppingCart, User, Menu as MenuIcon, X, Heart } from "lucide-react";
 import Menu from "./menu";
 import { Card, CardContent } from "./ui/card";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import SearchProduct from "./search-products";
 import { useRouter } from "next/navigation";
+import { RootState } from "@/store/store";
+import { clearUser } from "@/store/user-slice";
+import useAppSelector from "@/custom-hook/use-app-selector";
+import useAppDispatch from "@/custom-hook/use-app-dispatch";
+import useIsomorphicEffect from "@/custom-hook/use-isomorphic-effect";
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const router = useRouter();
+  const user = useAppSelector((state: RootState) => state.user);
+  const dispatch = useAppDispatch();
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
-  useEffect(() => {
+  useIsomorphicEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 10);
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const handleLogout = () => {
+    dispatch(clearUser());
+    localStorage.removeItem("user");
+    setDropdownOpen(false);
+    router.push("/user-login");
+  };
 
   return (
     <>
@@ -63,13 +78,45 @@ const Header = () => {
               >
                 <Heart className="w-5 h-5" />
               </Button>
-              <Button
-                onClick={() => router.push("/user-login")}
-                variant="ghost"
-                className="bg-transparent text-gray-800 dark:text-white hover:bg-transparent shadow-none font-semibold"
-              >
-                <User className="w-5 h-5" />
-              </Button>
+              {!user?.name ? (
+                <Button
+                  onClick={() => router.push("/user-login")}
+                  variant="ghost"
+                  className="bg-transparent text-gray-800 dark:text-white hover:bg-transparent shadow-none font-semibold"
+                >
+                  <User className="w-5 h-5" />
+                </Button>
+              ) : (
+                <div className="relative inline-block">
+                  <Button
+                    onClick={() => setDropdownOpen((prev) => !prev)}
+                    variant="ghost"
+                    className="bg-transparent text-gray-800 dark:text-white hover:bg-transparent shadow-none font-semibold flex items-center gap-2"
+                  >
+                    <User className="w-5 h-5" />
+                    <span>{user.name}</span>
+                  </Button>
+                  {dropdownOpen && (
+                    <div className="absolute right-0 mt-2 w-40 bg-white dark:bg-gray-800 border rounded shadow-lg z-50">
+                      <button
+                        className="block w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
+                        onClick={() => {
+                          setDropdownOpen(false);
+                          router.push("/admin");
+                        }}
+                      >
+                        Admin Page
+                      </button>
+                      <button
+                        className="block w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
+                        onClick={handleLogout}
+                      >
+                        Logout
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
               {menuOpen && (
                 <Card className="absolute top-17 left-0 w-full h-100 rounded-none">
                   <CardContent>

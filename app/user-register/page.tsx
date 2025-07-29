@@ -5,8 +5,10 @@ import { Button } from "@/components/ui/button";
 import Wrapper from "@/components/wrapper";
 import { registerSchema } from "@/schemas/register-schema";
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
 import { updateUser } from "@/store/user-slice";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import useAppDispatch from "@/custom-hook/use-app-dispatch";
 
 const RegisterPage = () => {
   const [form, setForm] = useState({
@@ -16,7 +18,8 @@ const RegisterPage = () => {
     password: "",
   });
   const [error, setError] = useState<string | null>(null);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
+  const router = useRouter();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.id]: e.target.value });
@@ -36,11 +39,15 @@ const RegisterPage = () => {
       id: Date.now().toString(),
       name: `${form.firstName} ${form.lastName}`,
       email: form.email,
+      password: form.password, // <-- Add this line
     };
     dispatch(updateUser(user));
     localStorage.setItem("user", JSON.stringify(user));
 
-    alert(`Registered as ${form.firstName} ${form.lastName} (${form.email})`);
+    toast.success(`Registered as ${form.firstName} ${form.lastName} (${form.email})`);
+    setTimeout(() => {
+      router.push("/products");
+    }, 1200);
   };
 
   return (

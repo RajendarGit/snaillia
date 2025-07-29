@@ -6,14 +6,17 @@ import Wrapper from "@/components/wrapper";
 import { loginSchema } from "@/schemas/login-schema";
 import Link from "next/link";
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
 import { updateUser } from "@/store/user-slice";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import useAppDispatch from "@/custom-hook/use-app-dispatch";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
+  const router = useRouter();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,20 +28,25 @@ const LoginPage = () => {
 
     // Get user from localStorage
     const storedUser = localStorage.getItem("user");
-    if (!storedUser) {
+    if (storedUser) {
+      const user = JSON.parse(storedUser);
+      if (user.email === email && user.password === password) {
+        setError("");
+        dispatch(updateUser(user));
+        toast.success(`Logged in as ${user.name} (${user.email})`);
+        localStorage.setItem("user", JSON.stringify(user)); // Update user in localStorage
+        setTimeout(() => {
+          router.push("/products");
+        }, 1200);
+        // login success
+      } else {
+        setError("Invalid email or password.");
+        // login failed
+      }
+    } else {
       setError("No registered user found. Please register first.");
       return;
     }
-    const user = JSON.parse(storedUser);
-
-    if (user.email !== email || user.password !== password) {
-      setError("Invalid email or password.");
-      return;
-    }
-
-    setError("");
-    dispatch(updateUser(user));
-    alert(`Logged in as ${user.name} (${user.email})`);
     // Optionally, redirect user after login
   };
 
