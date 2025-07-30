@@ -4,7 +4,6 @@ interface UserState {
   id: string | null;
   name: string | null;
   email: string | null;
-  // Add other user fields as needed
 }
 
 const initialState: UserState = {
@@ -20,10 +19,8 @@ const userSlice = createSlice({
     updateUser(state, action: PayloadAction<Partial<UserState>>) {
       return { ...state, ...action.payload };
     },
-    clearUser(state) {
-      state.id = null;
-      state.name = null;
-      state.email = null;
+    clearUser() {
+      return initialState; // Reset to initial state
     },
   },
 });

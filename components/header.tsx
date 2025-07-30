@@ -8,19 +8,21 @@ import { Card, CardContent } from "./ui/card";
 import { useState } from "react";
 import SearchProduct from "./search-products";
 import { useRouter } from "next/navigation";
-import { RootState } from "@/store/store";
 import { clearUser } from "@/store/user-slice";
 import useAppSelector from "@/custom-hook/use-app-selector";
 import useAppDispatch from "@/custom-hook/use-app-dispatch";
 import useIsomorphicEffect from "@/custom-hook/use-isomorphic-effect";
+import { setLoggedIn } from "@/store/add-to-favourite-slice";
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const router = useRouter();
-  const user = useAppSelector((state: RootState) => state.user);
+  // const user = useAppSelector((state: RootState) => state.user);
+  const user = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const favourites = useAppSelector((state) => state.favourite.favourites);
 
   useIsomorphicEffect(() => {
     const handleScroll = () => {
@@ -32,6 +34,7 @@ const Header = () => {
 
   const handleLogout = () => {
     dispatch(clearUser());
+    dispatch(setLoggedIn(false));
     localStorage.removeItem("user");
     setDropdownOpen(false);
     router.push("/user-login");
@@ -72,13 +75,19 @@ const Header = () => {
               >
                 <ShoppingCart className="w-5 h-5" />
               </Button>
-              <Button
+              {user?.email && <Button
                 variant="ghost"
-                className="bg-transparent text-gray-800 dark:text-white hover:bg-transparent shadow-none font-semibold"
+                className="bg-transparent text-gray-800 dark:text-white hover:bg-transparent shadow-none font-semibold relative"
+                onClick={() => router.push("/favourite")}
               >
                 <Heart className="w-5 h-5" />
-              </Button>
-              {!user?.name ? (
+                {favourites.length > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full px-1.5">
+                    {favourites.length}
+                  </span>
+                )}
+              </Button>}
+              {!user?.email ? (
                 <Button
                   onClick={() => router.push("/user-login")}
                   variant="ghost"

@@ -10,6 +10,9 @@ import { updateUser } from "@/store/user-slice";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import useAppDispatch from "@/custom-hook/use-app-dispatch";
+import { validationMessages } from "@/constants/validation-messages";
+import ErrorMessage from "@/components/error-message";
+import { setLoggedIn } from "@/store/add-to-favourite-slice";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -33,18 +36,19 @@ const LoginPage = () => {
       if (user.email === email && user.password === password) {
         setError("");
         dispatch(updateUser(user));
-        toast.success(`Logged in as ${user.name} (${user.email})`);
+        dispatch(setLoggedIn(true));
+        toast.success(validationMessages.loggedInSuccess(user));
         localStorage.setItem("user", JSON.stringify(user)); // Update user in localStorage
         setTimeout(() => {
           router.push("/products");
         }, 1200);
         // login success
       } else {
-        setError("Invalid email or password.");
+        setError(validationMessages.invalidEmailPassword);
         // login failed
       }
     } else {
-      setError("No registered user found. Please register first.");
+      setError(validationMessages.invalidUser);
       return;
     }
     // Optionally, redirect user after login
@@ -76,7 +80,7 @@ const LoginPage = () => {
             required
             placeholder="Enter your password"
           />
-          {error && <div className="text-red-500">{error}</div>}
+          {error && <ErrorMessage msg={error} />}
           <p className="text-gray-400">
             Dont have an account?
             <Link className="ml-4 text-[#7fa68d] font-semibold" href='/user-register'>Register</Link>

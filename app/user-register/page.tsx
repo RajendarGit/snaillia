@@ -1,14 +1,14 @@
-'use client'
+"use client";
 import FloatingTextInner from "@/components/floating-text-inner";
 import InnerHeader from "@/components/inner-header";
 import { Button } from "@/components/ui/button";
 import Wrapper from "@/components/wrapper";
 import { registerSchema } from "@/schemas/register-schema";
 import React, { useState } from "react";
-import { updateUser } from "@/store/user-slice";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import useAppDispatch from "@/custom-hook/use-app-dispatch";
+import { validationMessages } from "@/constants/validation-messages";
+import ErrorMessage from "@/components/error-message";
 
 const RegisterPage = () => {
   const [form, setForm] = useState({
@@ -18,7 +18,6 @@ const RegisterPage = () => {
     password: "",
   });
   const [error, setError] = useState<string | null>(null);
-  const dispatch = useAppDispatch();
   const router = useRouter();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -27,26 +26,34 @@ const RegisterPage = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
     const result = registerSchema.safeParse(form);
     if (!result.success) {
       setError(result.error.issues[0].message);
       return;
     }
+
     setError(null);
 
-    // Store user in Redux and localStorage
-    const user = {
+    const newUser = {
       id: Date.now().toString(),
       name: `${form.firstName} ${form.lastName}`,
       email: form.email,
-      password: form.password, // <-- Add this line
+      password: form.password, // Note: ideally hashed
     };
-    dispatch(updateUser(user));
-    localStorage.setItem("user", JSON.stringify(user));
 
-    toast.success(`Registered as ${form.firstName} ${form.lastName} (${form.email})`);
+    localStorage.setItem("user", JSON.stringify(newUser));
+
+    toast.success(
+      validationMessages.registerSuccess({
+        firstName: form.firstName,
+        lastName: form.lastName,
+        email: form.email,
+      })
+    );
+
     setTimeout(() => {
-      router.push("/products");
+      router.push("/user-login");
     }, 1200);
   };
 
@@ -55,7 +62,10 @@ const RegisterPage = () => {
       <FloatingTextInner title="User Register" />
       <InnerHeader title="User Register" />
       <Wrapper>
-        <form onSubmit={handleSubmit} className="lg:w-[40%] grid gap-4 mx-auto py-20">
+        <form
+          onSubmit={handleSubmit}
+          className="lg:w-[40%] grid gap-4 mx-auto py-20"
+        >
           <label htmlFor="firstName">First Name:</label>
           <input
             id="firstName"
@@ -96,8 +106,10 @@ const RegisterPage = () => {
             required
             placeholder="Enter your password"
           />
-          {error && <p className="text-red-500">{error}</p>}
-          <Button variant={"secondary"} size={"lg"} type="submit">Register</Button>
+          {error && <ErrorMessage msg={error} />}
+          <Button variant={"secondary"} size={"lg"} type="submit">
+            Register
+          </Button>
         </form>
       </Wrapper>
     </div>
