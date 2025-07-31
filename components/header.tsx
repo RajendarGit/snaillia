@@ -23,6 +23,7 @@ const Header = () => {
   const dispatch = useAppDispatch();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const favourites = useAppSelector((state) => state.favourite.favourites);
+  const cartItems = useAppSelector((state) => state.cart.items);
 
   useIsomorphicEffect(() => {
     const handleScroll = () => {
@@ -35,7 +36,6 @@ const Header = () => {
   const handleLogout = () => {
     dispatch(clearUser());
     dispatch(setLoggedIn(false));
-    localStorage.removeItem("user");
     setDropdownOpen(false);
     router.push("/user-login");
   };
@@ -51,9 +51,9 @@ const Header = () => {
         )}
       >
         <div className="px-10">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between relative">
             <Logo />
-            <div className="hidden md:block">
+            <div className="hidden md:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
               <Menu />
             </div>
             <div className="relative">
@@ -69,24 +69,34 @@ const Header = () => {
                 )}
               </Button>
               <SearchProduct />
-              <Button
-                variant="ghost"
-                className="bg-transparent text-gray-800 dark:text-white hover:bg-transparent shadow-none font-semibold"
-              >
-                <ShoppingCart className="w-5 h-5" />
-              </Button>
-              {user?.email && <Button
-                variant="ghost"
-                className="bg-transparent text-gray-800 dark:text-white hover:bg-transparent shadow-none font-semibold relative"
-                onClick={() => router.push("/favourite")}
-              >
-                <Heart className="w-5 h-5" />
-                {favourites.length > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full px-1.5">
-                    {favourites.length}
-                  </span>
-                )}
-              </Button>}
+              {user?.email && (
+                <Button
+                  variant="ghost"
+                  className="bg-transparent text-gray-800 dark:text-white hover:bg-transparent shadow-none font-semibold relative"
+                  onClick={() => router.push("/cart")}
+                >
+                  <ShoppingCart className="w-5 h-5" />
+                  {cartItems.length > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-red-700 text-white text-xs rounded-full px-1.5 h-5 w-5 flex items-center justify-center">
+                      {cartItems.length}
+                    </span>
+                  )}
+                </Button>
+              )}
+              {user?.email && (
+                <Button
+                  variant="ghost"
+                  className="bg-transparent text-gray-800 dark:text-white hover:bg-transparent shadow-none font-semibold relative"
+                  onClick={() => router.push("/favourite")}
+                >
+                  <Heart className="w-5 h-5" />
+                  {favourites.length > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-red-700 text-white text-xs rounded-full px-1.5 h-5 w-5 flex items-center justify-center">
+                      {favourites.length}
+                    </span>
+                  )}
+                </Button>
+              )}
               {!user?.email ? (
                 <Button
                   onClick={() => router.push("/user-login")}
