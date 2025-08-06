@@ -1,4 +1,6 @@
-export const products = [
+import { Product } from "@/types/products";
+
+export const products: Product[] = [
   {
     id: 1,
     name: "Aloe Vera Gel",
@@ -147,7 +149,7 @@ export const products = [
       id,
       name: `Nature Beauty Product ${id}`,
       description: `A premium natural beauty product number ${id} for healthy skin and hair.`,
-      price: (9.99 + (id % 10) * 1.5).toFixed(2),
+      price: parseFloat((9.99 + (id % 10) * 1.5).toFixed(2)),
       image: id % 2 === 0 ? "/assets/images/about.png" : "/assets/images/banner.png",
     };
   }),
