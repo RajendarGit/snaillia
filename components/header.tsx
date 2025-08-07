@@ -137,9 +137,9 @@ const Header = () => {
                 </div>
               )}
               {menuOpen && (
-                <Card className="absolute top-17 left-0 w-full h-100 rounded-none">
+                <Card className="absolute top-13 left-0 ml-auto w-fit h-100 rounded-none">
                   <CardContent>
-                    <Menu />
+                    <Menu menuClick={()=>setMenuOpen(false)} />
                   </CardContent>
                 </Card>
               )}

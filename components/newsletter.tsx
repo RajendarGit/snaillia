@@ -22,15 +22,15 @@ const Newsletter = () => {
             <p className="mb-8 lg:w-[80%] text-gray-500">
               Enter your email below for daily updates
             </p>
-            <div className="flex items-center gap-4">
+            <div className="md:flex items-center gap-4 md:w-[70%]">
               <input
                 type="email"
                 value={email}
                 onChange={e => setEmail(e.target.value)}
                 placeholder="Enter your email"
-                className="input-box"
+                className="input-box mb-4 md:mb-0"
               />
-              <Button variant="secondary" size="lg" className="mr-4 shadow-2xl">
+              <Button variant="secondary" size="lg" className="mr-4 shadow-2xl w-full md:w-auto">
                 Get started
               </Button>
             </div>
